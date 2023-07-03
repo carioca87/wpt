@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<head>
+    <script src="/resources/testharness.js"></script>
+    <script src="/resources/testharnessreport.js"></script>
+    <script src="./getResourceID.js"></script>
+    <script src="./testResourceInitiator.js"></script>
+    <!--Script Responsible for loading various resources  -->
+    <script src="./loadingResources.js"></script>
+</head>
+<body>
+</body>
+<script>
+  promise_test(async t => {
+    const expectedInitiator = await getResourceID('loadingResources.js');
+    const resources = [
+      'empty-stylesheet.css',
+      'blue.png',
+      'sample-document.html',
+      'empty-script.js'
+    ];
+for (const resource of resources) {
+            await testResourceInitiator(resource, expectedInitiator);
+        }
+  }, "Ensure initiator Attribute matches with Script ResourceID");
+</script>

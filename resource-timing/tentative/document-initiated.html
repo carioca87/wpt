@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<head>
+    <script src="/resources/testharness.js"></script>
+    <script src="/resources/testharnessreport.js"></script>
+    <script src="./testResourceInitiator.js"></script>
+    <script src="./getDocumentResourceID.js"></script>
+    <!-- Empty Preloaded Script -->
+    <link rel="preload" href="./resources/empty-preload.js" as="script" />
+    <!-- Empty Blocking Script -->
+    <script src="./resources/empty-script.js"></script>
+    <!-- Blocking Async Script -->
+    <script async src="./resources/blocking-async-script.js"></script>
+    <!-- Deferred Script -->
+    <script defer src="./resources/deferred-script.js"></script>
+    <!-- Module Script -->
+    <script type="module" src="./resources/module-script.js"></script>
+    <!-- Empty Stylesheet -->
+    <link rel="stylesheet" href="./resources/empty-stylesheet.css">
+    <!-- Inline Styles -->
+    <style>
+        body {
+            background-image: url('./resources/sample-background.png');
+            font-family: 'Dummy', sans-serif;
+        }
+        @font-face {
+            font-family: 'Dummy';
+            src: url('./resources/dummy-font.ttf');
+        }
+    </style>
+</head>
+<body>
+    <img src="./resources/blue.png" alt="Sample Image for testing initiator Attribute">
+    <iframe src="./resources/sample-document.html"></iframe>
+
+    <!-- Inline Script for calling different Resources -->
+    <script>
+        // Load stylesheet
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = './resources/empty-stylesheet-1.css';
+        document.head.appendChild(link);
+
+        // Load image
+        const img = document.createElement('img');
+        img.src = './resources/another-image.jpg';
+        document.body.appendChild(img);
+    </script>
+</body>
+<script>
+    promise_test(async t => {
+    const expectedInitiator =  await getDocumentResourceID();
+    const resources = [
+                        'empty-preload.js',
+                        'empty-script.js',
+                        'blocking-async-script.js',
+                        'deferred-script.js',
+                        'module-script.js',
+                        'empty-stylesheet.css',
+                        'sample-background.png',
+                        'dummy-font.ttf',
+                        'blue.png',
+                        'sample-document.html',
+                        'empty-stylesheet-1.css',
+                        'another-image.png'
+                      ];
+for (const resource of resources) {
+            await testResourceInitiator(resource, expectedInitiator);
+        }
+  }, "Ensure initiator Attribute matches with Document ResourceID");
+</script>

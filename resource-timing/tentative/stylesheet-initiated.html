@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<head>
+    <script src="/resources/testharness.js"></script>
+    <script src="/resources/testharnessreport.js"></script>
+    <script src="./getResourceID.js"></script>
+    <script src="./testResourceInitiator.js"></script>
+    <!-- Stylesheet responsible for fetching other Resources.  -->
+    <link rel="stylesheet" href="./resources/fetch-other-style.css">
+</head>
+<body>
+</body>
+<script>
+  promise_test(async t => {
+    const expectedInitiator = await getResourceID('fetch-other-style.css');
+    const resources = [
+      'empty-stylesheet.css',
+      'another-image.png',
+      'dummy-font.ttf'
+    ];
+for (const resource of resources) {
+            await testResourceInitiator(resource, expectedInitiator);
+        }
+  }, "Ensure initiator Attribute matches with Stylesheet ResourceID");
+</script>

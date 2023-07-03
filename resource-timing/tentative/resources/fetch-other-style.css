@@ -1,0 +1,12 @@
+@import url('./empty-stylesheet.css');
+
+/* Load a dummy font */
+@font-face {
+    font-family: DummyFont;
+    src: url('./dummy-font.ttf');
+}
+
+  /* Load a dummy image */
+  body {
+    background-image: url('./another-image.png');
+}
