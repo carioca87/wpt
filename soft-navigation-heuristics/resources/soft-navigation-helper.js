@@ -20,9 +20,10 @@ const testSoftNavigation =
       const testName = options.testName;
       const pushUrl = readValue(options.pushUrl, true);
       const eventType = readValue(options.eventType, "click");
+      const eventPrepWork = options.eventPrepWork;
       promise_test(async t => {
         const preClickLcp = await getLcpEntries();
-        setEvent(t, link, pushState, addContent, pushUrl, eventType);
+        setEvent(t, link, pushState, addContent, pushUrl, eventType, eventPrepWork);
         for (let i = 0; i < clicks; ++i) {
           let paint_entries_promise = waitOnPaintEntriesPromise();
           clicked = false;
@@ -113,9 +114,12 @@ const click = link => {
   }
 }
 
-const setEvent = (t, button, pushState, addContent, pushUrl, eventType) => {
+const setEvent = (t, button, pushState, addContent, pushUrl, eventType, prepWork) => {
   const eventObject = (eventType == "click") ? button : window;
   eventObject.addEventListener(eventType, async e => {
+    if (prepWork &&!prepWork(t)) {
+      return;
+    }
     timestamps[counter]["eventStart"] = performance.now();
     // Jump through a task, to ensure task tracking is working properly.
     await new Promise(r => t.step_timeout(r, 0));
